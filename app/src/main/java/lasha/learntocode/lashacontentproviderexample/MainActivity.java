@@ -8,12 +8,16 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,12 +39,23 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Log.d(TAG, "onClick: starts");
                 String[] projection = {ContactsContract.Contacts.DISPLAY_NAME_PRIMARY};
-                ContentResolver contentResolver=getContentResolver();
-                Cursor cursor=contentResolver.query(ContactsContract.Contacts.CONTENT_URI,
+                ContentResolver contentResolver = getContentResolver();
+                Cursor cursor = contentResolver.query(ContactsContract.Contacts.CONTENT_URI,
                         projection,
                         null,
                         null,
                         ContactsContract.Contacts.DISPLAY_NAME_PRIMARY);
+
+                if (cursor != null) {
+                    List<String> contacts = new ArrayList<String>();
+                    while (cursor.moveToNext()) {
+                        contacts.add(cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY)));
+                    }
+                    cursor.close();
+                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this, R.layout.contact_detail, R.id.name, contacts);
+                    contactName.setAdapter(adapter);
+                }
+                Log.d(TAG, "fab onClick: ends");
             }
         });
     }
