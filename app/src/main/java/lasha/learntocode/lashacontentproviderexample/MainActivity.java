@@ -1,17 +1,24 @@
 package lasha.learntocode.lashacontentproviderexample;
 
+import android.content.ContentResolver;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final String TAG = "MainActivity";
+    private ListView contactName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,12 +27,20 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        contactName = (ListView) findViewById(R.id.contact_names);
+
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Log.d(TAG, "onClick: starts");
+                String[] projection = {ContactsContract.Contacts.DISPLAY_NAME_PRIMARY};
+                ContentResolver contentResolver=getContentResolver();
+                Cursor cursor=contentResolver.query(ContactsContract.Contacts.CONTENT_URI,
+                        projection,
+                        null,
+                        null,
+                        ContactsContract.Contacts.DISPLAY_NAME_PRIMARY);
             }
         });
     }
