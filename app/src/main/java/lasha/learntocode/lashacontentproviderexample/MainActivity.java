@@ -1,5 +1,6 @@
 package lasha.learntocode.lashacontentproviderexample;
 
+import android.Manifest;
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -23,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     private ListView contactName;
+    private static final int REQUEST_CODE_READ_CONTACTS = 1;
+    private static boolean READ_CONTACTS_GRANTED = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         contactName = (ListView) findViewById(R.id.contact_names);
+        int hasReadContactPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS);
+        Log.d(TAG, "onCreate: checkSelfPermission = " + hasReadContactPermission);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -58,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "fab onClick: ends");
             }
         });
+        Log.d(TAG, "onCreate: ends");
     }
 
     @Override
